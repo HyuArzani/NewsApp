@@ -1,12 +1,17 @@
 import React, {Component} from 'react';
 import {Platform, StyleSheet, Text, View} from 'react-native';
+import {WebView} from 'react-native-webview';
 
 class NewsDetail extends Component {
   render() {
+    const { navigation } = this.props;
+    const data = navigation.getParam('data', {});
     return (
-      <View style={styles.container}>
-        <Text>NewsDetail</Text>
-      </View>
+      <WebView
+        source={{ uri: data.url }}
+        style={{ marginTop: 20 }}
+        onLoadProgress={e => console.log(e.nativeEvent.progress)}
+      />
     );
   }
 }
