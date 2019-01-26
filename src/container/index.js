@@ -2,6 +2,7 @@ import {createStackNavigator} from 'react-navigation';
 
 import Home from './Home.js';
 import NewsDetail from './NewsDetail.js';
+import Search from './Search.js';
 
 export default AppNavigator = createStackNavigator(
     {
@@ -14,6 +15,13 @@ export default AppNavigator = createStackNavigator(
         NewsDetail: {
             screen: NewsDetail
         },
+        Search: {
+            screen: Search,
+            //navigationOptions:{
+            //    header: null
+            //}
+        }
+
     },
     {
         initialRouteName:"Home"

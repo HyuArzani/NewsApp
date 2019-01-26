@@ -20,7 +20,7 @@ class NewsItem extends Component {
           marginVertical: 20*globalStyle.WIDTH
         }}
       >
-        <ImageBackground
+        {item.urlToImage && <ImageBackground
           style={{
             flex:1,
             height: 160*globalStyle.WIDTH,
@@ -35,21 +35,21 @@ class NewsItem extends Component {
             paddingHorizontal: 10*globalStyle.WIDTH,
             color: 'white'
           }}>{item.source.name}</Text>
-        </ImageBackground>
-        <Text 
+        </ImageBackground>}
+        {item.title && <Text 
           numberOfLines={2}
           style={{
             fontWeight: 'bold',
             fontSize:20,
             marginBottom: 4*globalStyle.WIDTH
           }}
-        >{item.title}</Text>
-        <Text 
+        >{item.title}</Text>}
+        {item.description && <Text 
           numberOfLines={4}
           style={{
             fontSize: 12
           }}
-        >{item.description}</Text>
+        >{item.description}</Text>}
       </TouchableOpacity>
     );
   }

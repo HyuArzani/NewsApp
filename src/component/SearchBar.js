@@ -13,6 +13,7 @@ class SearchBar extends Component {
   }
 
   changeText(text){
+    const{onSearch}=this.props;
     if (this.state.typingTimeout) {
         clearTimeout(this.state.typingTimeout);
     }
@@ -20,26 +21,26 @@ class SearchBar extends Component {
         typing: false,
         input: text,
         typingTimeout: setTimeout(()=>{
-            console.log("DO SOMETHING HERE", text)
+          onSearch && onSearch(text);
         }, 1000)
     });
   }
 
   render() {
-    const {containerStyle} = this.props;
+    const {containerStyle, onSearch} = this.props;
     return (
       <View style={[styles.container, containerStyle]}>
         <TextInput 
           {...this.props}
           onSubmitEditing={() => {
-            console.log("DO SOMETHING HERE", this.state.input)       
+            onSearch && onSearch(this.state.input);       
           }}
           onChangeText={(text)=>{this.changeText(text)}}
           value={this.state.input}
           />
         <TouchableOpacity
           style={{padding: 10*globalStyle.WIDTH}}
-          onPress={() => console.log("DO SOMETHING HERE", this.state.input)}
+          onPress={() => {onSearch && onSearch(this.state.input)}}
         >
           <Image style={styles.icSearch}
             source={require('@Assets/ic-search.png')}

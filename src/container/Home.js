@@ -10,17 +10,25 @@ class Home extends Component {
   constructor(props){
     super(props)
     this.state={
-      headlines:[]
+      country:'id'
     }
   }
 
   componentDidMount(){
     const{dispatch}=this.props;
-    dispatch(getHeadLines('id'));
+    dispatch(getHeadLines(this.state.country));
   }
 
   navigateToDetail(item){
     this.props.navigation.navigate('NewsDetail', {data: item});
+  }
+
+  changeCountry(country){
+    const{dispatch}=this.props;
+    this.setState({country: country}, 
+      ()=>{
+        dispatch(getHeadLines(this.state.country));
+      })
   }
 
   render() {
@@ -48,6 +56,7 @@ class Home extends Component {
           showsVerticalScrollIndicator={false}
         />
         <SearchBar 
+          onFocus={()=>{this.props.navigation.navigate('Search');}}
           placeholder="Search"
           placeholderTextColor="silver"
           containerStyle={{
@@ -57,13 +66,13 @@ class Home extends Component {
           style={styles.searchTextStyle}
         />
         <ActionButton buttonColor="rgba(231,76,60,1)">
-          <ActionButton.Item buttonColor='#9b59b6' onPress={() => console.log("notes tapped!")}>
+          <ActionButton.Item buttonColor='#9b59b6' onPress={() => {this.changeCountry('us')}}>
             <View name="md-create" style={styles.actionButtonIcon} />
           </ActionButton.Item>
-          <ActionButton.Item buttonColor='#3498db' onPress={() => {}}>
+          <ActionButton.Item buttonColor='#3498db' onPress={() => {this.changeCountry('id')}}>
             <View name="md-notifications-off" style={styles.actionButtonIcon} />
           </ActionButton.Item>
-          <ActionButton.Item buttonColor='#1abc9c' onPress={() => {}}>
+          <ActionButton.Item buttonColor='#1abc9c' onPress={() => {this.changeCountry('uk')}}>
             <View name="md-done-all" style={styles.actionButtonIcon} />
           </ActionButton.Item>
         </ActionButton>
@@ -95,7 +104,6 @@ const styles = StyleSheet.create({
 function mapStateToProps(state){
   const {headlines} = state;
   let result = {
-    kontol: state,
     headlines: headlines.headlines,
   };
   return result;
