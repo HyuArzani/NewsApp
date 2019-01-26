@@ -1,9 +1,10 @@
 import React, {Component} from 'react';
-import {Image, StyleSheet, Text, SafeAreaView, View, FlatList, TouchableOpacity} from 'react-native';
-import {SearchBar, NewsItem} from '../component';
-import * as globalStyle from '../style/globalStyle.js';
-import axios from 'axios';
-import {NEWS_API} from '../../config.js';
+import {connect} from 'react-redux';
+import {Platform, StyleSheet, Text, SafeAreaView, View, FlatList, TouchableOpacity} from 'react-native';
+import ActionButton from 'react-native-action-button';
+import {getHeadLines} from '@Actions/headlines.js';
+import {SearchBar, NewsItem} from '@Component';
+import * as globalStyle from '@Style/globalStyle.js';
 
 class Home extends Component {
   constructor(props){
@@ -14,30 +15,8 @@ class Home extends Component {
   }
 
   componentDidMount(){
-    this.getHeadlines().then(resolve=>{
-      this.setState({headlines: resolve}, ()=>{
-        console.log("RESPONSE == ", this.state.headlines);
-      })
-    }).catch(error=>{
-
-    })
-  }
-
-  getHeadlines(){
-    return new Promise((resolve, reject)=>{
-      axios.get('https://newsapi.org/v2/top-headlines?country=id&apiKey='+NEWS_API,{timeout: 40000})
-      .then(function (response) {
-        if(response.data && response.data.articles){
-          resolve(response.data.articles);
-        }
-        reject("No Article in the headlines");
-      })
-      .catch(function (error) {
-        // handle error
-        console.log(error);
-        reject(error);
-      });
-    })
+    const{dispatch}=this.props;
+    dispatch(getHeadLines('id'));
   }
 
   navigateToDetail(item){
@@ -45,6 +24,7 @@ class Home extends Component {
   }
 
   render() {
+    const{headlines}=this.props;
     return (
       <SafeAreaView style={styles.container}>
         <FlatList
@@ -57,7 +37,7 @@ class Home extends Component {
             paddingHorizontal: 16*globalStyle.WIDTH,
             paddingBottom: 24*globalStyle.WIDTH
           }}
-          data={this.state.headlines}
+          data={headlines}
           renderItem={({item}) => 
               <NewsItem
                 onPress={(item)=>this.navigateToDetail(item)}
@@ -72,10 +52,21 @@ class Home extends Component {
           placeholderTextColor="silver"
           containerStyle={{
             position: 'absolute',
-            top: 20*globalStyle.WIDTH
+            top: Platform.OS == 'ios'?40*globalStyle.WIDTH:20*globalStyle.WIDTH
           }}
           style={styles.searchTextStyle}
         />
+        <ActionButton buttonColor="rgba(231,76,60,1)">
+          <ActionButton.Item buttonColor='#9b59b6' onPress={() => console.log("notes tapped!")}>
+            <View name="md-create" style={styles.actionButtonIcon} />
+          </ActionButton.Item>
+          <ActionButton.Item buttonColor='#3498db' onPress={() => {}}>
+            <View name="md-notifications-off" style={styles.actionButtonIcon} />
+          </ActionButton.Item>
+          <ActionButton.Item buttonColor='#1abc9c' onPress={() => {}}>
+            <View name="md-done-all" style={styles.actionButtonIcon} />
+          </ActionButton.Item>
+        </ActionButton>
       </SafeAreaView>
     );
   }
@@ -93,7 +84,21 @@ const styles = StyleSheet.create({
     textAlign: 'left',
     fontSize: 16,
     marginLeft:10*globalStyle.WIDTH
-  }
+  },
+  actionButtonIcon: {
+    fontSize: 20,
+    height: 22,
+    color: 'white',
+  },
 });
 
-export default Home
+function mapStateToProps(state){
+  const {headlines} = state;
+  let result = {
+    kontol: state,
+    headlines: headlines.headlines,
+  };
+  return result;
+}
+
+export default connect(mapStateToProps)(Home)

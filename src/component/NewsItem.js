@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {TouchableOpacity, StyleSheet, Text, Image} from 'react-native';
+import {TouchableOpacity, StyleSheet, Text, ImageBackground} from 'react-native';
 import * as globalStyle from '../style/globalStyle.js';
 
 class NewsItem extends Component {
@@ -17,18 +17,39 @@ class NewsItem extends Component {
           onPress && onPress(item)
         }}
         style={{
-
+          marginVertical: 20*globalStyle.WIDTH
         }}
       >
-        <Image
+        <ImageBackground
           style={{
             flex:1,
-            height: 160*globalStyle.WIDTH
+            height: 160*globalStyle.WIDTH,
+            marginBottom: 8*globalStyle.WIDTH,
+            justifyContent: 'flex-end',
+            alignItems:'flex-end'
           }}
           source={{uri: item.urlToImage}}
-        />
-        <Text numberOfLines={2}>{item.title}</Text>
-        <Text numberOfLines={4}>{item.description}</Text>
+        >
+          <Text style={{
+            paddingBottom: 6*globalStyle.WIDTH,
+            paddingHorizontal: 10*globalStyle.WIDTH,
+            color: 'white'
+          }}>{item.source.name}</Text>
+        </ImageBackground>
+        <Text 
+          numberOfLines={2}
+          style={{
+            fontWeight: 'bold',
+            fontSize:20,
+            marginBottom: 4*globalStyle.WIDTH
+          }}
+        >{item.title}</Text>
+        <Text 
+          numberOfLines={4}
+          style={{
+            fontSize: 12
+          }}
+        >{item.description}</Text>
       </TouchableOpacity>
     );
   }

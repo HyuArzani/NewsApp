@@ -1,9 +1,9 @@
 import {createStackNavigator} from 'react-navigation';
 
-import Home from '../container/Home.js';
-import NewsDetail from '../container/NewsDetail.js';
+import Home from './Home.js';
+import NewsDetail from './NewsDetail.js';
 
-export const AppNavigator = createStackNavigator(
+export default AppNavigator = createStackNavigator(
     {
         Home: {
             screen: Home,
