@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
-import {SearchBar, NewsItem} from '@Component'
+import {SearchBar, SearchItem} from '@Component'
 import {StyleSheet, SafeAreaView, FlatList} from 'react-native';
 import {searchHeadlines} from '@Actions/search';
 import * as globalStyle from '@Style/globalStyle.js';
@@ -12,6 +12,10 @@ class Search extends Component {
         dispatch(searchHeadlines(keyword));
     }
 
+    navigateToDetail(item){
+        this.props.navigation.push('NewsDetail', {data: item});
+      }
+
     render() {
         const{search}=this.props;
         return (
@@ -21,19 +25,22 @@ class Search extends Component {
                     placeholder="Search"
                     placeholderTextColor="silver"
                     containerStyle={{
-                        marginTop: 10*globalStyle.WIDTH
+                        marginTop: 20*globalStyle.WIDTH
                     }}
                     style={styles.searchTextStyle}
+                    onBack={()=>{
+                        this.props.navigation.goBack()
+                    }}
                     onSearch={(text)=>{this.searchArticles(text)}}
                 />
                 <FlatList
                     contentContainerStyle={{
                         paddingHorizontal: 20*globalStyle.WIDTH,
-                        paddingBottom: 24*globalStyle.WIDTH
+                        paddingBottom: 24*globalStyle.WIDTH,
                     }}
                     data={search}
                     renderItem={({item}) => 
-                        <NewsItem
+                        <SearchItem
                             onPress={(item)=>this.navigateToDetail(item)}
                             item={item}
                         />

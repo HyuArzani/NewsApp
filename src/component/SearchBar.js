@@ -27,9 +27,17 @@ class SearchBar extends Component {
   }
 
   render() {
-    const {containerStyle, onSearch} = this.props;
+    const {containerStyle, onSearch, onBack} = this.props;
     return (
       <View style={[styles.container, containerStyle]}>
+        {onBack && <TouchableOpacity
+          style={{padding: 10*globalStyle.WIDTH}}
+          onPress={() => {onBack && onBack()}}
+        >
+          <Image style={styles.icSearch}
+            source={require('@Assets/ic-leftarrow.png')}
+          />
+        </TouchableOpacity>}
         <TextInput 
           {...this.props}
           onSubmitEditing={() => {

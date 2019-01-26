@@ -17,9 +17,9 @@ export default AppNavigator = createStackNavigator(
         },
         Search: {
             screen: Search,
-            //navigationOptions:{
-            //    header: null
-            //}
+            navigationOptions:{
+                header: null
+            }
         }
 
     },

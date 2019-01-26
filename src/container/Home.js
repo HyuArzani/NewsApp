@@ -20,7 +20,7 @@ class Home extends Component {
   }
 
   navigateToDetail(item){
-    this.props.navigation.navigate('NewsDetail', {data: item});
+    this.props.navigation.push('NewsDetail', {data: item});
   }
 
   changeCountry(country){
