@@ -1,20 +1,34 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {SearchBar, SearchItem} from '@Component'
-import {StyleSheet, SafeAreaView, FlatList} from 'react-native';
-import {searchHeadlines} from '@Actions/search';
+import {StyleSheet, SafeAreaView, FlatList, ActivityIndicator, View} from 'react-native';
+import {searchHeadlines, resetSearch} from '@Actions/search';
 import * as globalStyle from '@Style/globalStyle.js';
 
 class Search extends Component {
+    constructor(props){
+        super(props);
+        this.state={
+            isLoading: false
+        }
+    }
 
     searchArticles(keyword){
         const{dispatch}=this.props;
-        dispatch(searchHeadlines(keyword));
+        this.setState({isLoading: true})
+        dispatch(searchHeadlines(keyword)).then(()=>{
+            this.setState({isLoading: false})
+        })
     }
 
     navigateToDetail(item){
         this.props.navigation.push('NewsDetail', {data: item});
-      }
+    }
+
+    componentWillUnmount(){
+        const{dispatch}=this.props;
+        dispatch(resetSearch());
+    }
 
     render() {
         const{search}=this.props;
@@ -33,6 +47,12 @@ class Search extends Component {
                     }}
                     onSearch={(text)=>{this.searchArticles(text)}}
                 />
+                {this.state.isLoading?
+                <View style={{flex: 1, width: globalStyle.windowWidth, justifyContent:'center'}}>
+                    <ActivityIndicator
+                        size={"large"}
+                    />
+                </View>:
                 <FlatList
                     contentContainerStyle={{
                         paddingHorizontal: 20*globalStyle.WIDTH,
@@ -47,7 +67,7 @@ class Search extends Component {
                     }
                     scrollEventThrottle={16}
                     showsVerticalScrollIndicator={false}
-                />
+                />}
             </SafeAreaView>
         );
     }

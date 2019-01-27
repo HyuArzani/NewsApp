@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
-import {Platform, StyleSheet, Text, SafeAreaView, View, FlatList, TouchableOpacity} from 'react-native';
+import {Platform, StyleSheet, ActivityIndicator, View, FlatList} from 'react-native';
 import {getHeadLines} from '@Actions/headlines.js';
 import {SearchBar, NewsItem, MenuButton} from '@Component';
 import * as globalStyle from '@Style/globalStyle.js';
@@ -9,12 +9,24 @@ class Home extends Component {
   constructor(props){
     super(props);
     this.state={
-      selectedCountry:'id'
+      selectedCountry:'id',
+      isLoading: false,
     }
   }
+
+  componentWillMount(){
+    this.setState({
+      isLoading: true
+    })
+  }
+
   componentDidMount(){
     const{dispatch}=this.props;
-    dispatch(getHeadLines(this.state.selectedCountry));
+    dispatch(getHeadLines(this.state.selectedCountry)).then(()=>{
+      this.setState({
+        isLoading: false
+      })
+    })
   }
 
   navigateToDetail(item){
@@ -23,16 +35,29 @@ class Home extends Component {
 
   changeCountry(country){
     const{dispatch}=this.props;
+    this.setState({
+      isLoading: true
+    })
     this.setState({selectedCountry: country}, ()=>{
-      dispatch(getHeadLines(this.state.selectedCountry))
+      dispatch(getHeadLines(this.state.selectedCountry)).then(()=>{
+        this.setState({
+          isLoading: false
+        })
+      })
     })
   }
 
   render() {
     const{headlines}=this.props;
     return (
-      <SafeAreaView style={styles.container}>
-        <FlatList
+      <View style={styles.container}>
+        {this.state.isLoading?
+        <View style={{flex: 1, width: globalStyle.windowWidth, justifyContent:'center'}}>
+          <ActivityIndicator
+            size={"large"}
+          />
+        </View>
+        :<FlatList
           ListHeaderComponent={
             <View
               style={{height: 60*globalStyle.WIDTH}}
@@ -51,7 +76,7 @@ class Home extends Component {
           }
           scrollEventThrottle={16}
           showsVerticalScrollIndicator={false}
-        />
+        />}
         <SearchBar 
           onFocus={()=>{this.props.navigation.navigate('Search');}}
           placeholder="Search"
@@ -65,7 +90,7 @@ class Home extends Component {
         <MenuButton
           onChange={(country)=>{this.changeCountry(country)}}
         />
-      </SafeAreaView>
+      </View>
     );
   }
 }

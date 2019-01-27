@@ -19,10 +19,17 @@ export const searchHeadlines = (keyword) => {
     }
 }
 
+export const resetSearch = () => {
+    return (dispatch) => {
+        return dispatch(searchHeadLinesSuccess([]));
+    }
+}
+
 const searchHeadLinesSuccess = (result) => {
     return {
         type: SEARCH_ARTICLES_SUCCESS,
         result: result,
     }
 };
+
 const searchHeadLinesFailure = (error) =>({type: SEARCH_ARTICLES_FAILURE, error: error});
