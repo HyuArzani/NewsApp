@@ -1,22 +1,20 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {Platform, StyleSheet, Text, SafeAreaView, View, FlatList, TouchableOpacity} from 'react-native';
-import ActionButton from 'react-native-action-button';
 import {getHeadLines} from '@Actions/headlines.js';
-import {SearchBar, NewsItem} from '@Component';
+import {SearchBar, NewsItem, MenuButton} from '@Component';
 import * as globalStyle from '@Style/globalStyle.js';
 
 class Home extends Component {
   constructor(props){
-    super(props)
+    super(props);
     this.state={
-      country:'id'
+      selectedCountry:'id'
     }
   }
-
   componentDidMount(){
     const{dispatch}=this.props;
-    dispatch(getHeadLines(this.state.country));
+    dispatch(getHeadLines(this.state.selectedCountry));
   }
 
   navigateToDetail(item){
@@ -25,10 +23,9 @@ class Home extends Component {
 
   changeCountry(country){
     const{dispatch}=this.props;
-    this.setState({country: country}, 
-      ()=>{
-        dispatch(getHeadLines(this.state.country));
-      })
+    this.setState({selectedCountry: country}, ()=>{
+      dispatch(getHeadLines(this.state.selectedCountry))
+    })
   }
 
   render() {
@@ -45,7 +42,7 @@ class Home extends Component {
             paddingHorizontal: 16*globalStyle.WIDTH,
             paddingBottom: 24*globalStyle.WIDTH
           }}
-          data={headlines}
+          data={headlines[this.state.selectedCountry]}
           renderItem={({item}) => 
               <NewsItem
                 onPress={(item)=>this.navigateToDetail(item)}
@@ -65,17 +62,9 @@ class Home extends Component {
           }}
           style={styles.searchTextStyle}
         />
-        <ActionButton buttonColor="rgba(231,76,60,1)">
-          <ActionButton.Item buttonColor='#9b59b6' onPress={() => {this.changeCountry('us')}}>
-            <View name="md-create" style={styles.actionButtonIcon} />
-          </ActionButton.Item>
-          <ActionButton.Item buttonColor='#3498db' onPress={() => {this.changeCountry('id')}}>
-            <View name="md-notifications-off" style={styles.actionButtonIcon} />
-          </ActionButton.Item>
-          <ActionButton.Item buttonColor='#1abc9c' onPress={() => {this.changeCountry('uk')}}>
-            <View name="md-done-all" style={styles.actionButtonIcon} />
-          </ActionButton.Item>
-        </ActionButton>
+        <MenuButton
+          onChange={(country)=>{this.changeCountry(country)}}
+        />
       </SafeAreaView>
     );
   }
@@ -94,16 +83,12 @@ const styles = StyleSheet.create({
     fontSize: 16,
     marginLeft:10*globalStyle.WIDTH
   },
-  actionButtonIcon: {
-    fontSize: 20,
-    height: 22,
-    color: 'white',
-  },
 });
 
 function mapStateToProps(state){
   const {headlines} = state;
   let result = {
+    reduxState: state,
     headlines: headlines.headlines,
   };
   return result;

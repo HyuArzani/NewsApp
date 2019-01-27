@@ -3,12 +3,6 @@ import {TouchableOpacity, Text, Image, View} from 'react-native';
 import * as globalStyle from '../style/globalStyle.js';
 
 class SearchItem extends Component {
-  constructor(props){
-    super(props);
-    this.state = {
-    }
-  }
-
   render() {
     const {item, onPress} = this.props;
     return (
@@ -34,7 +28,7 @@ class SearchItem extends Component {
           }}
           source={{uri: item.urlToImage}}
         />}
-        {item.title && 
+        {item.title !== 0&& 
         <View
             style={{
                 flex: 1,

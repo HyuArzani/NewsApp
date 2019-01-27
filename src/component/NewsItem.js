@@ -3,12 +3,6 @@ import {TouchableOpacity, StyleSheet, Text, ImageBackground} from 'react-native'
 import * as globalStyle from '../style/globalStyle.js';
 
 class NewsItem extends Component {
-  constructor(props){
-    super(props);
-    this.state = {
-    }
-  }
-
   render() {
     const {item, onPress} = this.props;
     return (
@@ -36,7 +30,7 @@ class NewsItem extends Component {
             color: 'white'
           }}>{item.source.name}</Text>
         </ImageBackground>}
-        {item.title && <Text 
+        {item.title !== 0&&<Text 
           numberOfLines={2}
           style={{
             fontWeight: 'bold',
@@ -44,7 +38,7 @@ class NewsItem extends Component {
             marginBottom: 4*globalStyle.WIDTH
           }}
         >{item.title}</Text>}
-        {item.description && <Text 
+        {item.description !== 0&&<Text 
           numberOfLines={4}
           style={{
             fontSize: 12
